@@ -1,0 +1,45 @@
+name: 24/7 Telegram Bot
+
+on:
+  # Har 25 daqiqada avtomatik ishga tushirish
+  schedule:
+    - cron: '*/25 * * * *'
+  
+  # Qo'lda ishga tushirish
+  workflow_dispatch:
+  
+  # Kod o'zgartirilsa
+  push:
+    branches: [ main ]
+
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 24  # 24 daqiqadan keyin to'xtatish
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+        
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+        
+    - name: Run Telegram Bot
+      env:
+        BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+      run: |
+        echo "=========================================="
+        echo "🚀 24/7 TELEGRAM BOT - GITHUB ACTIONS"
+        echo "=========================================="
+        echo "Platforma: GitHub Actions"
+        echo "Uptime: 24/7 (har 25 daqiqada restart)"
+        echo "Narx: Umrbod BEPUL"
+        echo "Vaqt: $(date)"
+        echo "=========================================="
+        python bot.py
